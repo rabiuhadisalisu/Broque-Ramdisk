@@ -1,38 +1,26 @@
-name: Build Broque Ramdisk
+name: Build and Publish C# Project
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
     runs-on: windows-latest
-    
+
     steps:
-      # Step 1: Checkout code
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # Step 2: Setup MSBuild
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1
+      - name: Restore dependencies
+        run: dotnet restore
 
-      # Step 4: Restore NuGet packages
-      - name: Restore NuGet packages
-        run: nuget restore "Broque Ramdisk.sln" --verbosity detailed
+      - name: Build the project
+        run: dotnet build --configuration Release
 
-      # Step 5: Build the solution
-      - name: Build solution
-        run: msbuild "Broque Ramdisk.sln" /p:Configuration=Debug
-
-      # Step 6: Archive build artifacts
-      - name: Archive build artifacts
+      - name: Publish the artifact
         uses: actions/upload-artifact@v4
         with:
-          name: BroqueRamdiskBuild
-          path: |
-            Broque Ramdisk/bin/Debug/
+          name: build-artifact
+          path: ./BroqueRamdisk/bin/Release/BroqueRamdisk.exe
