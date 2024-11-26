@@ -12,9 +12,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Restore dependencies
-        run: cd D:\a\Broque-Ramdisk\Broque-Ramdisk && dotnet add package Newtonsoft.Json
         
       - name: Restore dependencies
         run: dotnet restore
