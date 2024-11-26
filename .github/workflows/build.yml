@@ -14,8 +14,8 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Restore dependencies
-        run: dotnet add package Newtonsoft.Json
-
+        run: cd Broque Ramdisk && dotnet add package Newtonsoft.Json
+        
       - name: Restore dependencies
         run: dotnet restore
 
