@@ -1,0 +1,43 @@
+name: Build Broque Ramdisk
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Setup MSBuild and .NET Framework
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup .NET Framework
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '4.7.2'  # Match your project's target framework version
+
+      # Restore NuGet packages
+      - name: Restore NuGet packages
+        run: nuget restore Broque Ramdisk.sln
+
+      # Build the solution
+      - name: Build solution
+        run: msbuild "Broque Ramdisk.sln" /p:Configuration=Debug
+
+      # Optional: Archive build artifacts
+      - name: Archive build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: BroqueRamdiskBuild
+          path: |
+            Broque Ramdisk/bin/Debug/
