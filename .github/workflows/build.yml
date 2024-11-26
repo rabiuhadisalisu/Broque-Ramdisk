@@ -13,26 +13,23 @@ jobs:
     runs-on: windows-latest
     
     steps:
-      # Checkout code
+      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Setup MSBuild and .NET Framework
+      # Step 2: Setup MSBuild
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+        uses: microsoft/setup-msbuild@v1
 
-      - name: Setup .NET Framework
-        uses: actions/setup-dotnet@v4
-       
-      # Restore NuGet packages
+      # Step 4: Restore NuGet packages
       - name: Restore NuGet packages
-        run: nuget restore Broque Ramdisk.sln
+        run: nuget restore "Broque Ramdisk.sln" --verbosity detailed
 
-      # Build the solution
+      # Step 5: Build the solution
       - name: Build solution
         run: msbuild "Broque Ramdisk.sln" /p:Configuration=Debug
 
-      # Optional: Archive build artifacts
+      # Step 6: Archive build artifacts
       - name: Archive build artifacts
         uses: actions/upload-artifact@v4
         with:
