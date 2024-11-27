@@ -17,7 +17,7 @@ jobs:
         run: dotnet clean && dotnet restore
 
       - name: Restore nuget
-        run: nuget restore "Broque Ramdisk.csproj"
+        run: nuget restore "D:\a\Broque Ramdisk/Broque Ramdisk.csproj"
 
 
       - name: Build the project
