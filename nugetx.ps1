@@ -27,7 +27,6 @@ function Download-NuGetPackage {
     if (Test-Path $libDir) {
         Copy-Item -Path (Get-ChildItem -Path $libDir -Filter "*.dll") -Destination $outputDirectory -Force
     }
-    Remove-Item -Recurse -Force -Path $tempDir
 }
 
 # List of required packages
