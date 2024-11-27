@@ -12,6 +12,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Run PowerShell script to restore specific dependencies
+        shell: pwsh
+        run: ./nugetx.ps1
         
       - name: Restore dependencies
         run: dotnet clean && dotnet restore
