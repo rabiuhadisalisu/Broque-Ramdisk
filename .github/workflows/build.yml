@@ -16,6 +16,10 @@ jobs:
       - name: Restore dependencies
         run: dotnet clean && dotnet restore
 
+      - name: Restore nuget
+        run: nuget restore
+
+
       - name: Build the project
         run: dotnet build --configuration Release
 
