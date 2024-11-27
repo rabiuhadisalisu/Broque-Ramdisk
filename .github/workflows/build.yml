@@ -17,11 +17,11 @@ jobs:
         run: dotnet clean && dotnet restore
 
       - name: Restore nuget
-        run: nuget restore
+        run: cd .. && nuget restore
 
 
       - name: Build the project
-        run: dotnet build --configuration Release
+        run: dotnet build --configuration Debug
 
       - name: Publish the artifact
         uses: actions/upload-artifact@v4
