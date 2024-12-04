@@ -1,10 +1,7 @@
 name: Build and Release
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+  workflow_dispatch: # Allows manual trigger via GitHub UI
 
 jobs:
   build:
@@ -25,13 +22,13 @@ jobs:
       - name: Build the project
         run: dotnet publish -c Release -r win-x64 --self-contained
 
-      - name: Create release asset
+      - name: Package app into zip
         run: |
           mkdir release
-          cp -r ./bin/Release/net7.0/win-x64/publish/* release/
-          cd release
-          zip -r app.zip .
-      - name: Package app into zip
+          # Copy the built files into the release folder
+          copy /y .\bin\Release\net7.0\win-x64\publish\* .\release\
+          # Zip the content
+          Compress-Archive -Path .\release\* -DestinationPath .\release\app.zip
 
       - name: Upload release asset
         uses: actions/upload-release-asset@v1
