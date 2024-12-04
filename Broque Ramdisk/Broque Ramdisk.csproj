@@ -9,12 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Data.SQLite" Version="1.0.115" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="RestSharp" Version="110.0.1" />
-    <PackageReference Include="Renci.SshNet" Version="2020.0.1" />
-    <PackageReference Include="Claunia.PropertyList" Version="2.3.0" />
-    <PackageReference Include="DotNetZip" Version="1.16.0" />
+    <PackageReference Include="System.Data.SQLite" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="RestSharp" />
+    <PackageReference Include="Renci.SshNet" />
+    <PackageReference Include="Claunia.PropertyList" />
+    <PackageReference Include="DotNetZip" />
   </ItemGroup>
 
   <ItemGroup>
