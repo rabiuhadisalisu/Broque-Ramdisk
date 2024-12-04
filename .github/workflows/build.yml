@@ -9,15 +9,24 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '7.x' # Adjust this to match the project's target framework
+        dotnet-version: '7.x' # Update if using a different .NET version
 
-    - name: Restore dependencies
-      run: dotnet restore "Broque Ramdisk/Broque Ramdisk.csproj"
+    - name: Restore NuGet packages
+      run: nuget restore "Broque Ramdisk.sln"
+
+    - name: Install missing dependencies
+      run: |
+        dotnet add "Broque Ramdisk/Broque Ramdisk.csproj" package System.Data.SQLite
+        dotnet add "Broque Ramdisk/Broque Ramdisk.csproj" package Newtonsoft.Json
+        dotnet add "Broque Ramdisk/Broque Ramdisk.csproj" package RestSharp
+        dotnet add "Broque Ramdisk/Broque Ramdisk.csproj" package Renci.SshNet
+        dotnet add "Broque Ramdisk/Broque Ramdisk.csproj" package Claunia.PropertyList
+        dotnet add "Broque Ramdisk/Broque Ramdisk.csproj" package Ionic.Zip
 
     - name: Build solution
       run: dotnet build "Broque Ramdisk.sln" --configuration Release
