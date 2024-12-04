@@ -1,26 +1,70 @@
-name: Build and Publish C# Project
+name: Build and Deploy
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: windows-latest
+    name: Build Application
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-        
-      - name: Restore dependencies
-        run: dotnet clean && dotnet restore
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Build the project
-        run: dotnet build --configuration Debug
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
 
-      - name: Publish the artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifact
-          path: ./BroqueRamdisk/bin/Release/BroqueRamdisk.exe
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build application
+      run: npm run build
+
+    - name: Package build artifacts
+      run: zip -r build.zip ./build
+      shell: bash
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build
+        path: build.zip
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: build
+
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Build v${{ github.run_number }}
+        body: |
+          This release contains the latest build of the application.
+        draft: false
+        prerelease: false
+
+    - name: Upload release asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: build.zip
+        asset_name: build.zip
+        asset_content_type: application/zip
