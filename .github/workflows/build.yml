@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Build and Release
 
 on:
   push:
@@ -8,53 +8,37 @@ on:
 
 jobs:
   build:
-    name: Build Application
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Package application
-      run: zip -r app.zip ./
-      shell: bash
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '7.0'
 
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: app
-        path: app.zip
+      - name: Restore dependencies
+        run: dotnet restore
 
-  release:
-    name: Create Release
-    needs: build
-    runs-on: ubuntu-latest
+      - name: Build the project
+        run: dotnet publish -c Release -r win-x64 --self-contained
 
-    steps:
-    - name: Download build artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: app
+      - name: Create release asset
+        run: |
+          mkdir release
+          cp -r ./bin/Release/net7.0/win-x64/publish/* release/
+          cd release
+          zip -r app.zip .
+      - name: Package app into zip
 
-    - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v${{ github.run_number }}
-        release_name: Build v${{ github.run_number }}
-        body: |
-          This release contains the latest build of the application.
-        draft: false
-        prerelease: false
-
-    - name: Upload release asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: app.zip
-        asset_name: app.zip
-        asset_content_type: application/zip
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./release/app.zip
+          asset_name: app.zip
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
