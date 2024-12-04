@@ -1,6 +1,7 @@
 name: Build and Publish Release
 
 on:
+  push:
   workflow_dispatch:
 
 jobs:
@@ -15,6 +16,9 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '7.x' # Adjust this to match the project's target framework
+        
+    - name: Set up NuGet sources
+      run: dotnet nuget add source https://api.nuget.org/v3/index.json --name nuget.org
 
     - name: Install Dependencies
       run: dotnet restore
