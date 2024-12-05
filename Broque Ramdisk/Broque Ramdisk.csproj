@@ -44,9 +44,7 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\Broque Ramdisk v2.3.5\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="plist-cil">
-      <HintPath>..\..\Broque Ramdisk v2.3.5\plist-cil.dll</HintPath>
-    </Reference>
+    <PackageReference Include="plist-cil" Version="2.2.0" />
     <Reference Include="Renci.SshNet">
       <HintPath>..\..\Broque Ramdisk v2.3.5\Renci.SshNet.dll</HintPath>
     </Reference>
